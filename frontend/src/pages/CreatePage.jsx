@@ -1,5 +1,7 @@
 import { useColorModeValue } from '@/components/ui/color-mode'
+import { useProductStore } from '@/store/product'
 import { Box, Button, Container, Heading, Input, VStack } from '@chakra-ui/react'
+import { ToastContainer, toast } from 'react-toastify';
 import React, { useState } from 'react'
 
 const CreatePage = () => {
@@ -9,8 +11,34 @@ const CreatePage = () => {
         image:"",
     })
 
-    const handleAddProduct = () => {
-        console.log(newProduct)
+
+	const {createProduct} = useProductStore()
+    const handleAddProduct = async() => {
+       const {success, message} = await createProduct(newProduct);
+	   if (!success) {
+		toast.error(message, {
+			position: "bottom-center",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "colored",
+			});
+	   }else{
+		toast.success(message, {
+			position: "bottom-center",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "colored",
+			});
+	   }
+	   setNewProduct({image:"", name:"", price:""})
     }
 
   return (
@@ -47,6 +75,7 @@ const CreatePage = () => {
 						</Button>
 					</VStack>
 				</Box>
+				<ToastContainer position='top-center'/>
 			</VStack>
 		</Container>
   )
